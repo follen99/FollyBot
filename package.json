@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/follen99/FollyBot/issues"
   },
-  "homepage": "https://github.com/follen99/FollyBot#readme"
+  "homepage": "https://github.com/follen99/FollyBot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
 }

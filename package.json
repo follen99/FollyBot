@@ -1,0 +1,19 @@
+{
+  "name": "follybot",
+  "version": "1.0.0",
+  "description": "a simple bot useful for telematic students",
+  "main": "follybot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/follen99/FollyBot.git"
+  },
+  "author": "Follen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/follen99/FollyBot/issues"
+  },
+  "homepage": "https://github.com/follen99/FollyBot#readme"
+}

@@ -31,6 +31,8 @@ Nella cartella del progetto eseguire i comandi:
 
 > npm install cheerio
 
+> npm install dotenv
+
 ## Eseguire il bot
 Per eseguire il bot basta eseguire "follybot.js":
 Recarsi nella directory del progetto ed eseguire il comando:

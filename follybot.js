@@ -1,18 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 require("dotenv").config();         //use the module with "npm install dotenv"
-
-
-client.login(process.env.BOT_TOKEN);
-client.on('ready',readyDiscord);
-function readyDiscord(){
-    console.log("Il bot è online!");
-}
-client.on('message',gotMessage);
-
-
-
-
 //################################### CLASSI ###################################
 class Lezione{
     /**
@@ -83,7 +71,7 @@ class Giorno{
         this.giorno=giorno;
     }
 
-    addLezione(lezione){
+    addLezione(lezione) {
         this.lezioni.push(lezione);
     }
     /**
@@ -112,7 +100,25 @@ class Giorno{
  * 5 = sabato
  * 6 = domenica
  */
-const giorni = [new Giorno("Lunedi",[]),new Giorno("Martedi",[]),new Giorno("mercoledi",[]),new Giorno("giovedi",[]),new Giorno("venerdi",[]),new Giorno("sabato",[]),new Giorno("domenica",[])];
+ var giorni = [new Giorno("Lunedi",[]),new Giorno("Martedi",[]),new Giorno("mercoledi",[]),new Giorno("giovedi",[]),new Giorno("venerdi",[]),new Giorno("sabato",[]),new Giorno("domenica",[])];
+
+
+ //################################### OPERAZIONI PRELIMINARI ###################################
+client.login(process.env.BOT_TOKEN);
+client.on('ready',readyDiscord);
+function readyDiscord(){
+    console.log("Il bot è online!");
+}
+client.on('message',gotMessage);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -131,7 +137,7 @@ function gotMessage(msg){
         }
         if((msg.content).toLowerCase().startsWith("/list")){                                         //inizio a controllare il contenuto dei messaggi
             //testMessages();
-            listLezioni();
+            listGiorni(giorni);
         }
         if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
             //testMessages();
@@ -141,6 +147,13 @@ function gotMessage(msg){
             lec = giorni[2].lezioni[0];
             rimuoviLezione(lec,msg);
         }
+        if((msg.content).toLowerCase().startsWith("/save")){
+            writeSaves(giorni);
+        }
+        if((msg.content).toLowerCase().startsWith("/read")){
+            console.log("entro");
+            readSaves();
+        }
 
 
 
@@ -149,6 +162,13 @@ function gotMessage(msg){
 
 
 //################################### FUNCTIONS ###################################
+
+function listGiorni(array){
+    console.log("####################################");
+    array.forEach(giorno => {
+        console.log(giorno);
+    });
+}
 
 function listLezioni(){
     console.log(giorni);
@@ -162,6 +182,8 @@ function addLezione(toFind){
     giorni.forEach(giorno => {
         //modifico solo il giorno scelto
         if((giorno.giorno.toLowerCase()) == toFind.toLocaleLowerCase()){
+            console.log("found lezione #########################");
+            console.log(giorno);
             giorno.addLezione(new Lezione("test","url","message","orario"));
         }
     });
@@ -218,4 +240,41 @@ function printHelpEmbed(message){
 }
 
 
+//################################### I/O ###################################
+function readSaves(){
+    const fs = require('fs');
 
+    // read JSON object from file
+    fs.readFile('giorni.json', 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+
+    // parse JSON object
+    //const users = JSON.parse(data.toString());
+    var giorniRead = JSON.parse(data);
+    giorniRead.forEach(giorno => {
+        /*var lezioniGiornoCurr=giorno.lezioni;
+        lezioniGiornoCurr.forEach(lezione => {
+            console.log(lezione.name);
+        });*/
+        console.log(giorno);
+    });
+    giorni = giorniRead;
+});
+}
+
+function writeSaves(giorni){
+    const fs = require('fs');
+
+    // convert JSON object to string
+    const data = JSON.stringify(giorni);
+
+    // write JSON string to a file
+    fs.writeFile('giorni.json', data, (err) => {
+        if (err) {
+            throw err;
+        }
+        console.log("JSON data is saved.");
+    });
+}

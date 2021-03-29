@@ -1,5 +1,7 @@
 # FollyBot
 Questo è un semplice bot per Discord che ti permetterà di tenere sempre traccia delle tue lezioni!
+<img src="https://github.com/follen99/FollyBot/blob/main/follyboticon.png" width=300>
+
 ## Funzioni principali
 
 - Tenere traccia degli orari delle lezioni

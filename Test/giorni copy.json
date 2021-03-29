@@ -1,1 +1,22 @@
-[{"lezioni":[],"giorno":"Lunedi"},{"lezioni":[{"name":"lezionemart","url":"urlmar","message":"messmar","orario":"orariomar"}],"giorno":"Martedi"},{"lezioni":[],"giorno":"mercoledi"},{"lezioni":[],"giorno":"giovedi"},{"lezioni":[],"giorno":"venerdi"},{"lezioni":[],"giorno":"sabato"},{"lezioni":[],"giorno":"domenica"}]
+[
+{"lezioni":
+    [{"name":"Storia dell'industria","url":"https://unisannio.webex.com/unisannio/j.php?MTID=m68d06ad737287c7f6db3f016a9e7cb95","message":"Nessun messaggio.","orario":"9-11"},
+        {"name":"Algoritmi e strutture dati","url":"null","message":"Non è presente un link fisso al momento.","orario":"11-13"},
+        {"name":"Ingegneria del software","url":"https://unisannio.webex.com/unisannio/j.php?MTID=m9de715399db6dcbc910ddf67e019684e","message":"Nessun messaggio.","orario":"14-17"}],
+        "giorno":"Lunedi"},
+{"lezioni":
+    [{"name":"Algoritmi e strutture dati","url":"null","message":"Non è presente un link fisso al momento.","orario":"16-18"}],
+        "giorno":"Martedi"},
+{"lezioni":
+    [{"name":"Computazione pervasiva","url":"null","message":"Non è presente un link fisso al momento.","orario":"14-16"}],
+        "giorno":"mercoledi"},
+{"lezioni":
+    [],
+        "giorno":"giovedi"},
+{"lezioni":
+    [{"name":"Ingegneria del software","url":"https://unisannio.webex.com/unisannio/j.php?MTID=mf4fbe210a9c38f11d4f385a6dbb4aeea","message":"Nessun messaggio.","orario":"9-12"},
+        {"name":"Computazione pervasiva","url":"null","message":"Non è presente un link fisso al momento.","orario":"12-14"},
+        {"name":"Storia dell'industria","url":"https://unisannio.webex.com/unisannio/j.php?MTID=m68d06ad737287c7f6db3f016a9e7cb95","message":"Nessun messaggio.","orario":"9-11"}],
+        "giorno":"venerdi"},
+{"lezioni":[],"giorno":"sabato"},
+{"lezioni":[],"giorno":"domenica"}]

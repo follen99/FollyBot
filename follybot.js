@@ -156,7 +156,8 @@ function gotMessage(msg){
         }
         if((msg.content).toLowerCase().startsWith("/list")){                                         //inizio a controllare il contenuto dei messaggi
             console.log("entro qui");
-            printAllFromFile(msg);
+            //printAllFromFile(msg);
+            printAllFromList(msg);
         }
         if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
             //il comando dovrebbe essere del tipo:
@@ -348,7 +349,13 @@ function gotMessage(msg){
             printGiorniFromFile(msg,day);
 
         }
-
+        /**updateGiorniFromFile */
+        if((msg.content).toLowerCase().startsWith("/test")){
+            updateGiorniFromFile();
+        }
+        if((msg.content).toLowerCase().startsWith("/prova")){
+            console.log(giorni);
+        }
 
 
     }
@@ -396,6 +403,7 @@ function addLezione(toFind,lezione){
         }
     });
 }
+
 function getGiorno(message) {
     let giorno = "";
 
@@ -497,6 +505,22 @@ function printHelpEmbed(message){
 
 
 //################################### I/O ###################################
+function updateGiorniFromFile(){
+    const fs = require('fs');
+    // read JSON object from file
+    fs.readFile('giorni.json', 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+
+        // parse JSON object
+        //const users = JSON.parse(data.toString());
+        giorni = JSON.parse(data);
+
+        console.log(giorni);
+    });
+}
+
 function readSaves(){
     const fs = require('fs');
 

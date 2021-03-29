@@ -23,7 +23,9 @@ Per poter utilizzare correttamente il bot bisogna effettuare le seguenti operazi
 Nella cartella del progetto eseguire i comandi:
 
 > npm install discord.js
+
 > npm install request
+
 > npm install cheerio
 
 ## Eseguire il bot

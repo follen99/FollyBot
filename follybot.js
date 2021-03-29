@@ -110,6 +110,7 @@ client.login(process.env.BOT_TOKEN);
 client.on('ready',readyDiscord);
 function readyDiscord(){
     console.log("Il bot è online!");
+    updateGiorniFromFile();
 }
 client.on('message',gotMessage);
 
@@ -505,7 +506,7 @@ function printHelpEmbed(message){
 
 
 //################################### I/O ###################################
-function updateGiorniFromFile(){
+/*function updateGiorniFromFile(){
     const fs = require('fs');
     // read JSON object from file
     fs.readFile('giorni.json', 'utf-8', (err, data) => {
@@ -519,7 +520,34 @@ function updateGiorniFromFile(){
 
         console.log(giorni);
     });
+}*/
+function updateGiorniFromFile(){
+    const fs = require('fs');
+    // read JSON object from file
+    fs.readFile('giorni.json', 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+
+        // parse JSON object
+        //const users = JSON.parse(data.toString());
+        giorniLetti = JSON.parse(data);
+
+        /**questa soluzione risolve l'errore "giorno.addLezione is not a function"
+         * sinceramente non ho idea del perchè
+         */
+        giorni.forEach(giorno => {
+            giorniLetti.forEach(giornoLetto => {
+                if ((giornoLetto.giorno) == giorno.giorno) {
+                    giorno.lezioni=giornoLetto.lezioni;
+                }
+            });
+        });
+
+        console.log(giorni);
+    });
 }
+
 
 function readSaves(){
     const fs = require('fs');

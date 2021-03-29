@@ -494,10 +494,10 @@ function printHelpEmbed(message){
         {name: '\u200B', value: '\u200B' },
         {name: '/exit',value: 'Chiudi il bot (admin only)', inline: true},
         {name: '/restart',value: 'Riavvia il bot (admin only)', inline: true},
-        {name: '/clear',value: 'Elimina messaggi (50, admin only)', inline: true},
+        {name: '/clearchat',value: 'Elimina messaggi (50, admin only)', inline: true},
         {name: '\u200B', value: '\u200B' },
-        {name: '/link',value: 'inserisci un codice e ricevi un link\nper la lezione corrispondente.',inline:true},
-        {name: '/meme',value: 'stampa un meme.\nscrivi"/meme help" per aiuto.',inline:true},
+        {name: '/link',value: '(obsoleto)',inline:true},
+        {name: '/meme',value: 'stampa un meme.\nscrivi"/meme help" per aiuto. (coming soon)',inline:true},
         {name: '/delete',value: 'elimina un numero di messaggi preciso. (admin only)',inline:true},
     )
     message.channel.send(follyBotEmbed)

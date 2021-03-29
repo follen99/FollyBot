@@ -1,4 +1,6 @@
 const Discord = require('discord.js');
+var request=require("request")
+var cheerio=require("cheerio")
 const client = new Discord.Client();
 require("dotenv").config();         //use the module with "npm install dotenv"
 //################################### CLASSI ###################################
@@ -133,6 +135,18 @@ function gotMessage(msg){
                 var parts=msg.content.split(" ");
     
                 deleteLastMessage(msg,parts[1]);
+            }
+            if((msg.content).toLowerCase().startsWith("/clearchat")){                                         //inizio a controllare il contenuto dei messaggi
+                clearChat(msg);
+            }
+            if((msg.content).toLowerCase().startsWith("/exit")){                                         //inizio a controllare il contenuto dei messaggi
+                exit(msg);
+            }if((msg.content).toLowerCase().startsWith("/restart")){                                         //inizio a controllare il contenuto dei messaggi
+                restartBot(msg);
+            }
+            if((msg.content).toLowerCase().startsWith("/image")){                                         //inizio a controllare il contenuto dei messaggi
+                var parts = msg.content.split(" ");
+                image(msg,parts);
             }
         }
         if(msg.author.id == process.env.OTHER_ID){    //altri id particolari
@@ -377,8 +391,8 @@ function addLezione(toFind,lezione){
         //modifico solo il giorno scelto
         if((giorno.giorno.toLowerCase()) == toFind.toLocaleLowerCase()){
             console.log("found lezione #########################");
-            console.log(giorno);
             giorno.addLezione(lezione);
+            console.log(giorno);
         }
     });
 }
@@ -573,6 +587,11 @@ function printAllFromFile(msg) {
         });*/
     });
 }
+function printAllFromList(msg){
+    giorni.forEach(element => {
+        printGiornoEmbed(element,msg);
+    });
+}
 function printGiornoEmbed(giorno,msg){
     const giornoEmbed=new Discord.MessageEmbed()
     .setColor('#2F3136')
@@ -651,4 +670,83 @@ function deleteLastMessage(message,amount){
             console.log(err);
           });
       }
+}
+
+function clearChat(message){
+    if (message.channel.type == 'text') {
+        message.channel.messages.fetch()
+          .then(messages => {
+            message.channel.bulkDelete(messages);
+            messagesDeleted = messages.array().length; // number of messages deleted
+
+            // Logging the number of messages deleted on both the channel and console.
+            message.channel.send("Eliminazione dei messaggi riuscita. Messaggi totali eliminati: "+messagesDeleted);
+            console.log('Deletion of messages successful. Total messages deleted: '+messagesDeleted)
+          })
+          .catch(err => {
+            console.log('Error while doing Bulk Delete');
+            console.log(err);
+          });
+      }
+}
+function exit(msg){
+    msg.channel.send('Sto spegnendo il bot.. ')
+    .then(msg => msg.client.destroy())
+}
+//restart the bot
+function restartBot(msg){
+    msg.channel.send('Sto riavviando il bot.. ')
+    .then(msg => msg.client.destroy())
+    .then(() => client.login('Nzc1NjQyMTc4NTQ2MzAyOTg2.X6pTEg._-JmDFs6QQNX3SZRDxdyBYi5E7E'));
+    msg.channel.send('Bot riavviato')
+}
+function image(message, parts){
+    var search = parts[1]//parts.slice(1).join(" ");
+    var amount=1;
+    if(parts.length>2){
+        amount=parts[2];
+    }
+
+    
+
+    var options = {
+        url: "http://results.dogpile.com/serp?qc=images&q=" + search,
+        method: "GET",
+        headers: {
+            "Accept": "text/html",
+            "User-Agent": "Chrome"
+        }
+    };
+
+    request(options, function(error, response, responseBody) {
+        if (error) {
+            // handle error
+            message.channel.send("Errore nella formattazione del testo. Inserisci un comando del tipo:")
+            message.channel.send("/image [immagineDaCercare] [numero di foto da mostrare]")
+            return;
+        }
+ 
+
+ 
+        $ = cheerio.load(responseBody); // load responseBody into cheerio (jQuery)
+ 
+        // In this search engine they use ".image a.link" as their css selector for image links
+        var links = $(".image a.link");
+ 
+        // We want to fetch the URLs not the DOM nodes, we do this with jQuery's .attr() function
+        // this line might be hard to understand but it goes thru all the links (DOM) and stores each url in an array called urls
+        var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
+        //console.log(urls);
+        if (!urls.length) {
+            // Handle no results
+            message.channel.send("Wow, strano!\nNon ho trovato nulla...")
+            return;
+        }
+ 
+        // Send result
+        message.channel.send("Inviando "+amount+" immagini...");
+        for(var i=0;i<amount;i++){
+            message.channel.send( urls[i] );
+        }
+    });
 }

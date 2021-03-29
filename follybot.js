@@ -399,6 +399,7 @@ function printHelpEmbed(message){
     .addFields(
         {name: '/help',value: 'Ottieni informazioni sui comandi', inline: true},
         {name: '/lezioni',value: 'Mostra le lezioni odierne', inline: true},
+        {name: '/add',value: '/add "giorno" "nome_lezione" "url" "messaggio" "orario"', inline: true},
         {name: '/lezioni ieri',value: 'Mostra le lezioni di ieri',inline: true},
         {name: '/lezioni domani',value: 'Mostra le lezioni di domani',inline: true},
         {name: '/lezioni tutte',value: 'Mostra tutte le lezioni',inline: true},
@@ -459,13 +460,28 @@ function printGiorniFromFile(msg,argument) {
         giorniLetti.forEach(giorno => {
             if ((giorno.giorno).toLowerCase()==argument.toLowerCase()) {
                 lezioniNelGiorno = giorno.lezioni;
-                lezioniNelGiorno.forEach(lezione => {
-                    console.log(lezione);
+                lezioniNelGiorno.forEach(lezioneCurr => {
+                    printLezioneEmbed(msg,lezioneCurr);
                 });
             }
         });
     });
 }
+
+function printLezioneEmbed(msg,lezioneToPrint){
+    const lezioneEmbed=new Discord.MessageEmbed()
+    .setColor('#2F3136')
+    .setTitle(lezioneToPrint.name)
+    .setThumbnail('https://i.imgur.com/1rI4Ff0.png')
+    .addFields(
+        {name: "URL: ",value: lezioneToPrint.url},
+        {name: "Messaggio: ",value: lezioneToPrint.message},
+        {name: "Orario: ",value: lezioneToPrint.orario}
+    )
+    
+    msg.channel.send(lezioneEmbed);
+}
+
 /**
  * 
  * @param {String} giorno 

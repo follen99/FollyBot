@@ -51,6 +51,7 @@ A questo punto, tutte le funzioni del bot funzionano correttamente, non resta ch
 Per utilizzare le funzioni:
 
 > /clear
+
 > /delete
 
 Bisogna creare un nuovo ruolo con permessi di amministratori (basta il permesso di eliminare i messaggi di altri utenti) ed assegnarlo al bot.

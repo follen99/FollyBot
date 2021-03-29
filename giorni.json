@@ -1,1 +1,1 @@
-[{"lezioni":[],"giorno":"Lunedi"},{"lezioni":[],"giorno":"Martedi"},{"lezioni":[],"giorno":"mercoledi"},{"lezioni":[],"giorno":"giovedi"},{"lezioni":[],"giorno":"venerdi"},{"lezioni":[],"giorno":"sabato"},{"lezioni":[],"giorno":"domenica"}]
+[{"lezioni":[{"name":"nome","url":"url","message":"messaggio","orario":"orario"}],"giorno":"Lunedi"},{"lezioni":[],"giorno":"Martedi"},{"lezioni":[],"giorno":"mercoledi"},{"lezioni":[],"giorno":"giovedi"},{"lezioni":[],"giorno":"venerdi"},{"lezioni":[],"giorno":"sabato"},{"lezioni":[],"giorno":"domenica"}]

@@ -165,9 +165,110 @@ function gotMessage(msg){
             writeSaves(giorni);
             sendConfirmEmbed(msg,"Lezioni salvate correttamente!","","");
         }
-        if((msg.content).toLowerCase().startsWith("/read")){
+        /*if((msg.content).toLowerCase() == "/read"){
             console.log("entro");
             readSaves();
+        }*/
+        if((msg.content).toLowerCase().startsWith("/lezioni")){
+            var parts = msg.content.split(" ");
+            var day=new Date().getDay();
+            switch (day) {
+                case 1:
+                        day="lunedi";
+                        break;
+                case 2:
+                        day="martedi";
+                        break;
+                case 3:
+                        day="mercoledi";
+                        break;
+                case 4:
+                        day="giovedi";
+                        break;
+                case 5:
+                        day="venerdi";
+                        break;
+                case 6:
+                        day="sabato";
+                        break;
+                case 7:
+                        day="domenica";
+                        break;
+                default:
+                    break;
+            }
+            if(parts[1]!=null){
+                switch (parts[1]) {
+                    case "lunedi":
+                        day="lunedi";
+                        break;
+                    case "lunedì":
+                        day="lunedi";
+                        break;
+                    case "martedi":
+                        day="martedi";
+                        break;
+                    case "martedì":
+                        day="martedi";
+                        break;
+                    case "mercoledi":
+                        day="mercoledi";
+                        break;
+                    case "mercoledì":
+                        day="mercoledi";
+                        break;
+                    case "giovedi":
+                        day="giovedi";
+                        break;
+                    case "giovedì":
+                        day="giovedi";
+                        break;
+                    case "venerdi":
+                        day="venerdi";
+                        break;
+                    case "venerdì":
+                        day="venerdi";
+                        break;
+                    case "sabato":
+                        day="sabato";
+                        break;
+                    case "domenica":
+                        day="domenica";
+                        break;
+                    case "1":
+                            day="lunedi";
+                            break;
+                    case "2":
+                            day="martedi";
+                            break;
+                    case "3":
+                            day="mercoledi";
+                            break;
+                    case "4":
+                            day="giovedi";
+                            break;
+                    case "5":
+                            day="venerdi";
+                            break;
+                    case "6":
+                            day="sabato";
+                            break;
+                    case "7":
+                            day="domenica";
+                            break;
+                    default:
+                        sendConfirmEmbed(msg,"Comando non valido","Comandi consentiti:","/lezioni [giorno]\ngiorno puo essere omesso oppure espresso con un numero | parola");
+                        return;
+                }
+            }
+            
+
+            printGiorniFromFile(msg,day);
+
+        }
+        if((msg.content).toLowerCase().startsWith("/readfile")){
+            console.log("leggo da file");
+            printGiorniFromFile(msg,"lunedi");
         }
 
 
@@ -326,18 +427,56 @@ function readSaves(){
             throw err;
         }
 
-    // parse JSON object
-    //const users = JSON.parse(data.toString());
-    var giorniRead = JSON.parse(data);
-    giorniRead.forEach(giorno => {
-        /*var lezioniGiornoCurr=giorno.lezioni;
-        lezioniGiornoCurr.forEach(lezione => {
-            console.log(lezione.name);
-        });*/
-        console.log(giorno);
+        // parse JSON object
+        //const users = JSON.parse(data.toString());
+        var giorniRead = JSON.parse(data);
+        for (let i = 0; i < giorniRead.length; i++) {
+            const giorno = giorniRead[i];
+            console.log(giorno.lezioni);
+            console.log("#####################")
+            giorni[i].setLezioni(giorno.lezioni);
+            
+        }
+
+
+        giorni = giorniRead;
     });
-    giorni = giorniRead;
-});
+}
+
+
+function printGiorniFromFile(msg,argument) {
+    const fs = require('fs');
+    // read JSON object from file
+    fs.readFile('giorni.json', 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+
+        // parse JSON object
+        //const users = JSON.parse(data.toString());
+    
+        var giorniLetti = JSON.parse(data);
+        giorniLetti.forEach(giorno => {
+            if ((giorno.giorno).toLowerCase()==argument.toLowerCase()) {
+                lezioniNelGiorno = giorno.lezioni;
+                lezioniNelGiorno.forEach(lezione => {
+                    console.log(lezione);
+                });
+            }
+        });
+    });
+}
+/**
+ * 
+ * @param {String} giorno 
+ * @param {Array} list
+ */
+function printGiorno(giorno,list,msg) {
+    list.forEach(giornoCurr => {
+        if(giornoCurr.toLowerCase()==giorno.toLocaleLowerCase()){
+            msg.channel.send(giornoCurr);
+        }
+    });
 }
 
 function writeSaves(giorni){

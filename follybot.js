@@ -141,8 +141,8 @@ function gotMessage(msg){
             printHelpEmbed(msg);
         }
         if((msg.content).toLowerCase().startsWith("/list")){                                         //inizio a controllare il contenuto dei messaggi
-            //testMessages();
-            listGiorni(giorni);
+            console.log("entro qui");
+            printAllFromFile(msg);
         }
         if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
             //il comando dovrebbe essere del tipo:
@@ -172,6 +172,74 @@ function gotMessage(msg){
         if((msg.content).toLowerCase().startsWith("/lezioni")){
             var parts = msg.content.split(" ");
             var day=new Date().getDay();
+            if(parts[1] == "ieri"){
+                if(day==1){
+                    day = 7;
+                }else{
+                    day = day-1;
+                }
+                switch (day) {
+                    case 1:
+                            day="lunedi";
+                            break;
+                    case 2:
+                            day="martedi";
+                            break;
+                    case 3:
+                            day="mercoledi";
+                            break;
+                    case 4:
+                            day="giovedi";
+                            break;
+                    case 5:
+                            day="venerdi";
+                            break;
+                    case 6:
+                            day="sabato";
+                            break;
+                    case 7:
+                            day="domenica";
+                            break;
+                    default:
+                        break;
+                }
+                printGiorniFromFile(msg,day);
+                return;
+            }
+            if (parts[1] == "domani") {
+                if (day == 7) {
+                    day = 1;
+                }else{
+                    day = day+1;
+                }
+                switch (day) {
+                    case 1:
+                            day="lunedi";
+                            break;
+                    case 2:
+                            day="martedi";
+                            break;
+                    case 3:
+                            day="mercoledi";
+                            break;
+                    case 4:
+                            day="giovedi";
+                            break;
+                    case 5:
+                            day="venerdi";
+                            break;
+                    case 6:
+                            day="sabato";
+                            break;
+                    case 7:
+                            day="domenica";
+                            break;
+                    default:
+                        break;
+                }
+                printGiorniFromFile(msg,day);
+                return;
+            }
             switch (day) {
                 case 1:
                         day="lunedi";
@@ -265,10 +333,6 @@ function gotMessage(msg){
 
             printGiorniFromFile(msg,day);
 
-        }
-        if((msg.content).toLowerCase().startsWith("/readfile")){
-            console.log("leggo da file");
-            printGiorniFromFile(msg,"lunedi");
         }
 
 
@@ -402,7 +466,7 @@ function printHelpEmbed(message){
         {name: '/add',value: '/add "giorno" "nome_lezione" "url" "messaggio" "orario"', inline: true},
         {name: '/lezioni ieri',value: 'Mostra le lezioni di ieri',inline: true},
         {name: '/lezioni domani',value: 'Mostra le lezioni di domani',inline: true},
-        {name: '/lezioni tutte',value: 'Mostra tutte le lezioni',inline: true},
+        {name: '/list',value: 'Mostra tutte le lezioni',inline: true},
         {name: '/image',value: 'Ricerca immagine per nome. Utilizzo: /image [nome] [numero di foto]', inline: true},
         {name: '\u200B', value: '\u200B' },
         {name: '/exit',value: 'Chiudi il bot (admin only)', inline: true},
@@ -457,15 +521,78 @@ function printGiorniFromFile(msg,argument) {
         //const users = JSON.parse(data.toString());
     
         var giorniLetti = JSON.parse(data);
+
+        //giorni.concat(giorniLetti);
+
+
+
         giorniLetti.forEach(giorno => {
             if ((giorno.giorno).toLowerCase()==argument.toLowerCase()) {
                 lezioniNelGiorno = giorno.lezioni;
-                lezioniNelGiorno.forEach(lezioneCurr => {
-                    printLezioneEmbed(msg,lezioneCurr);
-                });
+                if(lezioniNelGiorno.length == 0){
+                    const lezioneEmbed=new Discord.MessageEmbed()
+                        .setColor('#2F3136')
+                        .setTitle("Nessuna lezione trovata!")
+                        .setThumbnail('https://i.imgur.com/1rI4Ff0.png')
+                        .addFields(
+                            {name: "Prova con un altro giorno",value: "/lezioni lunedì"})
+                        
+                        msg.channel.send(lezioneEmbed);
+                }else{
+                    lezioniNelGiorno.forEach(lezioneCurr => {
+                        printLezioneEmbed(msg,lezioneCurr);
+                    });
+                }
+                
             }
         });
     });
+}
+
+function printAllFromFile(msg) {
+    const fs = require('fs');
+    // read JSON object from file
+    fs.readFile('giorni.json', 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+
+        // parse JSON object
+        //const users = JSON.parse(data.toString());
+    
+        var giorniLetti = JSON.parse(data);
+
+
+
+        giorniLetti.forEach(element => {
+            printGiornoEmbed(element,msg);
+        });
+
+        /*giorniLetti.forEach(giornoCurr => {
+            printGiorno(giornoCurr);
+        });*/
+    });
+}
+function printGiornoEmbed(giorno,msg){
+    const giornoEmbed=new Discord.MessageEmbed()
+    .setColor('#2F3136')
+    .setTitle(giorno.giorno)
+    .setThumbnail('https://i.imgur.com/1rI4Ff0.png')
+    if(giorno.lezioni !=0){
+        giorno.lezioni.forEach(lezioneDelGiorno => {
+            giornoEmbed.addFields(
+                {name: lezioneDelGiorno.name, value: lezioneDelGiorno.orario},
+                {name: "URL: ", value: lezioneDelGiorno.url},
+    
+            )
+        });
+    }else{
+        giornoEmbed.addFields(
+            {name: "Non hai lezioni oggi!", value: ":)"},
+        )
+    }
+    
+    msg.channel.send(giornoEmbed);
 }
 
 function printLezioneEmbed(msg,lezioneToPrint){

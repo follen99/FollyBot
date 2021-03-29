@@ -129,6 +129,11 @@ function gotMessage(msg){
     if(msg.channel.id == process.env.FOLLYBOT_CHANNEL){
         //entro in questa sezione solo se il 'sender' è un admin
         if(msg.author.id == process.env.ADMIN_ID /** || OTHER_ADMIN_ID */){
+            if((msg.content).toLowerCase().startsWith("/delete")){
+                var parts=msg.content.split(" ");
+    
+                deleteLastMessage(msg,parts[1]);
+            }
         }
         if(msg.author.id == process.env.OTHER_ID){    //altri id particolari
         }
@@ -140,8 +145,17 @@ function gotMessage(msg){
             listGiorni(giorni);
         }
         if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
-            //testMessages();
-            addLezione("mercoledi");
+            //il comando dovrebbe essere del tipo:
+            // /add "giorno" "nome_lezione" "url" "messaggio" "orario"
+            var parts=msg.content.split(" ");   //separo le parti
+            
+            var giornoToAdd = parts[1];
+
+            var lezione = new Lezione(parts[2],parts[3],parts[4],parts[5]);
+
+            addLezione(giornoToAdd,lezione);
+
+            sendConfirmEmbed(msg,"Lezione aggiunta!","Non dimenticare di salvare con: ","/save");
         }
         if((msg.content).toLowerCase().startsWith("/remove")){
             lec = giorni[2].lezioni[0];
@@ -149,6 +163,7 @@ function gotMessage(msg){
         }
         if((msg.content).toLowerCase().startsWith("/save")){
             writeSaves(giorni);
+            sendConfirmEmbed(msg,"Lezioni salvate correttamente!","","");
         }
         if((msg.content).toLowerCase().startsWith("/read")){
             console.log("entro");
@@ -163,6 +178,20 @@ function gotMessage(msg){
 
 //################################### FUNCTIONS ###################################
 
+function sendConfirmEmbed(msg,mainMessage,name,value) {
+    const confirmEmbed=new Discord.MessageEmbed()
+        .setColor('#2F3136')
+        .setTitle(mainMessage)
+        if(name!=""){
+            confirmEmbed.addFields(
+                {name: name,value: value}
+            )
+        }
+        
+        msg.channel.send(confirmEmbed);
+    
+}
+
 function listGiorni(array){
     console.log("####################################");
     array.forEach(giorno => {
@@ -176,17 +205,64 @@ function listLezioni(){
 
 /**
  * 
- * @param {String} toFind 
+ * @param {String} giorno 
  */
-function addLezione(toFind){
+function addLezione(toFind,lezione){
     giorni.forEach(giorno => {
         //modifico solo il giorno scelto
         if((giorno.giorno.toLowerCase()) == toFind.toLocaleLowerCase()){
             console.log("found lezione #########################");
             console.log(giorno);
-            giorno.addLezione(new Lezione("test","url","message","orario"));
+            giorno.addLezione(lezione);
         }
     });
+}
+function getGiorno(message) {
+    let giorno = "";
+
+    let filter = m => m.author.id === message.author.id
+    message.channel.send(`Digita il giorno in cui vuoi aggiungere la lezione:`).then(() => {
+      message.channel.awaitMessages(filter, {
+          max: 1,
+          time: 30000,
+          errors: ['time']
+        })
+        .then(message => {
+          message = message.first()
+          if (message.content.toLowerCase() == 'lunedi' || message.content.toLowerCase() == 'lunedì') {
+            message.channel.send(`Stai aggiungendo lezioni per il lunedì.`)
+            giorno="lunedi";
+          } else if (message.content.toLowerCase() == 'martedi' || message.content.toLowerCase() == 'martedì') {
+            message.channel.send(`Stai aggiungendo lezioni per il martedì.`)
+            giorno="martedi";
+          } else if (message.content.toLowerCase() == 'mercoledi' || message.content.toLowerCase() == 'mercoledì') {
+            message.channel.send(`Stai aggiungendo lezioni per il mercoledì.`)
+            giorno="mercoledi";
+          } else if (message.content.toLowerCase() == 'giovedi' || message.content.toLowerCase() == 'giovedì') {
+            message.channel.send(`Stai aggiungendo lezioni per il giovedì.`)
+            giorno="giovedi";
+          } else if (message.content.toLowerCase() == 'venerdi' || message.content.toLowerCase() == 'venerdì') {
+            message.channel.send(`Stai aggiungendo lezioni per il venerdì.`)
+            giorno="venerdi";
+          } else if (message.content.toLowerCase() == 'sabato' || message.content.toLowerCase() == 'sabato') {
+            message.channel.send(`Stai aggiungendo lezioni per il sabato.`)
+            giorno="sabato";
+          } else if (message.content.toLowerCase() == 'domenica' || message.content.toLowerCase() == 'domenica') {
+            message.channel.send(`Stai aggiungendo lezioni per la domenica.`)
+            giorno="domenica";
+          } else{
+            message.channel.send(`Terminated: Invalid Response`)
+            giorno = "null";
+          }
+        })
+        .catch(collected => {
+            message.channel.send('Timeout');
+            message.channel.send("Ho annullato l'operazione.");
+            return;
+        });
+    })
+
+    return giorno;
 }
 
 //da perfezionare non funge
@@ -277,4 +353,20 @@ function writeSaves(giorni){
         }
         console.log("JSON data is saved.");
     });
+}
+
+function deleteLastMessage(message,amount){
+    var am=1;
+    if(amount!=null) am=amount;
+
+    if (message.channel.type == 'text') {
+        message.channel.messages.fetch()
+          .then(messages => {
+            message.channel.bulkDelete(am);
+          })
+          .catch(err => {
+            console.log('Error while doing Bulk Delete');
+            console.log(err);
+          });
+      }
 }

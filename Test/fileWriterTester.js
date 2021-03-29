@@ -1,34 +1,26 @@
 const fs = require('fs');
 
-// create a JSON object
-const user = {
-    "id": 1,
-    "name": "Peppe",
-    "age": 25
-};
-const user1 = {
-    "id": 2,
-    "name": "Luigi",
-    "age": 26
-};
-const user2 = {
-    "id": 3,
-    "name": "Antonello",
-    "age": 27
-};
-const user3 = {
-    "id": 4,
-    "name": "Giuseppina",
-    "age": 28
-};
 
-var users=[user,user1,user2,user3];
+class Giorno{
+    constructor(nome,lezioni){
+        this.nome=nome;
+        this.lezioni=lezioni;
+    }
+}
+class Lezione{
+    constructor(nome,link){
+        this.nome=nome;
+        this.link=link;
+    }
+}
+var lezioni=[new Lezione("lezione1","link1"),new Lezione("lezione2","link2")];
+var giorni=[new Giorno("peppe",lezioni)];
 
 // convert JSON object to string
-const data = JSON.stringify(users);
+const data = JSON.stringify(giorni);
 
 // write JSON string to a file
-fs.writeFile('user.json', data, (err) => {
+fs.writeFile('giorni.json', data, (err) => {
     if (err) {
         throw err;
     }

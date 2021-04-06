@@ -187,6 +187,8 @@ function gotMessage(msg){
             readSaves();
         }*/
         if((msg.content).toLowerCase().startsWith("/lezioni")){
+
+
             var parts = msg.content.split(" ");
             var day=new Date().getDay();
             if(parts[1] == "ieri"){
@@ -347,6 +349,7 @@ function gotMessage(msg){
                 }
             }
             
+            sendConfirmEmbed(msg,day,"","");
 
             printGiorniFromFile(msg,day);
 

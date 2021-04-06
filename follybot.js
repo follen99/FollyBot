@@ -361,13 +361,20 @@ function gotMessage(msg){
         if((msg.content).toLowerCase().startsWith("/prova")){
             console.log(giorni);
         }*/
+        if((msg.content).toLowerCase().startsWith("/createList")){
 
+        }
 
     }
 }
 
 
+
 //################################### FUNCTIONS ###################################
+
+function createLinkList(msg,listName){
+
+}
 
 function sendConfirmEmbed(msg,mainMessage,name,value) {
     const confirmEmbed=new Discord.MessageEmbed()

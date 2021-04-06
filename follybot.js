@@ -129,7 +129,7 @@ client.on('message',gotMessage);
 
 function gotMessage(msg){
     /**questo primo if serve a controllare da quale canale è arrivato il messaggio */
-    if(msg.channel.id == process.env.FOLLYBOT_CHANNEL){
+    if(msg.channel.id == process.env.FOLLYBOT_CHANNEL||msg.channel.id == process.env.FOLLYBOT_TESTS){
         //entro in questa sezione solo se il 'sender' è un admin
         if(msg.author.id == process.env.ADMIN_ID /** || OTHER_ADMIN_ID */){
             if((msg.content).toLowerCase().startsWith("/delete")){
@@ -145,9 +145,26 @@ function gotMessage(msg){
             }if((msg.content).toLowerCase().startsWith("/restart")){                                         //inizio a controllare il contenuto dei messaggi
                 restartBot(msg);
             }
-            if((msg.content).toLowerCase().startsWith("/image")){                                         //inizio a controllare il contenuto dei messaggi
-                var parts = msg.content.split(" ");
-                image(msg,parts);
+            if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
+                //il comando dovrebbe essere del tipo:
+                // /add "giorno" "nome_lezione" "url" "messaggio" "orario"
+                var parts=msg.content.split(" ");   //separo le parti
+                
+                var giornoToAdd = parts[1];
+    
+                var lezione = new Lezione(parts[2],parts[3],parts[4],parts[5]);
+    
+                addLezione(giornoToAdd,lezione);
+    
+                sendConfirmEmbed(msg,"Lezione aggiunta!","Non dimenticare di salvare con: ","/save");
+            }
+            if((msg.content).toLowerCase().startsWith("/remove")){
+                lec = giorni[2].lezioni[0];
+                rimuoviLezione(lec,msg);
+            }
+            if((msg.content).toLowerCase().startsWith("/save")){
+                writeSaves(giorni);
+                sendConfirmEmbed(msg,"Lezioni salvate correttamente!","","");
             }
         }
         if(msg.author.id == process.env.OTHER_ID){    //altri id particolari
@@ -160,27 +177,11 @@ function gotMessage(msg){
             //printAllFromFile(msg);
             printAllFromList(msg);
         }
-        if((msg.content).toLowerCase().startsWith("/add")){                                         //inizio a controllare il contenuto dei messaggi
-            //il comando dovrebbe essere del tipo:
-            // /add "giorno" "nome_lezione" "url" "messaggio" "orario"
-            var parts=msg.content.split(" ");   //separo le parti
-            
-            var giornoToAdd = parts[1];
-
-            var lezione = new Lezione(parts[2],parts[3],parts[4],parts[5]);
-
-            addLezione(giornoToAdd,lezione);
-
-            sendConfirmEmbed(msg,"Lezione aggiunta!","Non dimenticare di salvare con: ","/save");
+        if((msg.content).toLowerCase().startsWith("/image")){                                         //inizio a controllare il contenuto dei messaggi
+            var parts = msg.content.split(" ");
+            image(msg,parts);
         }
-        if((msg.content).toLowerCase().startsWith("/remove")){
-            lec = giorni[2].lezioni[0];
-            rimuoviLezione(lec,msg);
-        }
-        if((msg.content).toLowerCase().startsWith("/save")){
-            writeSaves(giorni);
-            sendConfirmEmbed(msg,"Lezioni salvate correttamente!","","");
-        }
+        
         /*if((msg.content).toLowerCase() == "/read"){
             console.log("entro");
             readSaves();
@@ -351,12 +352,12 @@ function gotMessage(msg){
 
         }
         /**updateGiorniFromFile */
-        if((msg.content).toLowerCase().startsWith("/test")){
+        /*if((msg.content).toLowerCase().startsWith("/test")){
             updateGiorniFromFile();
         }
         if((msg.content).toLowerCase().startsWith("/prova")){
             console.log(giorni);
-        }
+        }*/
 
 
     }
